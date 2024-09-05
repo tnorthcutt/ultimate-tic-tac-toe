@@ -3,12 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tic-Tac-Toe</title>
-    @livewireStyles
+    <title>Ultimate Tic-Tac-Toe</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body>
-    @yield('content')
+    {{ $slot }}
+
     @livewireScripts
 </body>
 </html>

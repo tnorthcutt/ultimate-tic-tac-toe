@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Home;
 use App\Livewire\TicTacToe;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/game/{code?}', TicTacToe::class)->name('game');
+Route::get('/', Home::class)->name('home');
+Route::get('/game/{code}', TicTacToe::class)->name('game');

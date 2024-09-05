@@ -1,40 +1,31 @@
-<div wire:poll="pollGameState" class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-    <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-            <h1 class="text-4xl font-bold text-center text-gray-900 mb-8">Tic-Tac-Toe</h1>
+<div class="container mx-auto mt-10 text-center">
+    <h1 class="mb-4 text-4xl font-bold">Ultimate Tic-Tac-Toe</h1>
 
-            @if($game->code)
-                <p class="text-center text-gray-600 mb-4">Game Code: <span class="font-semibold">{{ $game->code }}</span></p>
-            @endif
+    @if($ultimateWinner)
+        <h2 class="mb-4 text-3xl font-bold">{{ $ultimateWinner }} wins the game!</h2>
+    @else
+        <h2 class="mb-2 text-2xl">Current player: {{ $currentPlayer }}</h2>
+        <h3 class="mb-4 text-xl">Next board: {{ $nextBoard !== null ? $nextBoard + 1 : 'Any' }}</h3>
+    @endif
 
-            @if($playerSymbol)
-                <p class="text-center text-gray-600 mb-4">You are playing as: <span class="font-semibold text-blue-600">{{ $playerSymbol }}</span></p>
-            @else
-                <p class="text-center text-gray-600 mb-4">You are spectating</p>
-            @endif
-
-            <div class="grid grid-cols-3 gap-4 mb-8">
-                @foreach($board as $index => $cell)
+    <div class="grid grid-cols-3 gap-4 mx-auto max-w-3xl ultimate-board">
+        @foreach($ultimateBoard as $boardIndex => $board)
+            <div class="board relative grid grid-cols-3 gap-1 p-2 {{ $nextBoard === $boardIndex || $nextBoard === null ? 'bg-green-200' : 'bg-gray-200' }}">
+                @foreach($board as $position => $value)
                     <button
-                        wire:click="makeMove({{ $index }})"
-                        {{ $cell || $winner || !$playerSymbol || $currentPlayer !== $playerSymbol ? 'disabled' : '' }}
-                        class="w-20 h-20 text-4xl font-bold bg-gray-200 rounded-lg focus:outline-none hover:bg-gray-300 transition duration-150 ease-in-out {{ $cell ? ($cell === 'X' ? 'text-blue-600' : 'text-red-600') : '' }}"
+                        wire:click="makeMove({{ $boardIndex }}, {{ $position }})"
+                        {{ $ultimateWinner || ($nextBoard !== null && $nextBoard !== $boardIndex) || $value ? 'disabled' : '' }}
+                        class="square w-full h-12 text-2xl font-bold bg-white border border-gray-300 hover:bg-gray-100 {{ $value ? ($value === 'X' ? 'text-blue-500' : 'text-red-500') : '' }}"
                     >
-                        {{ $cell }}
+                        {{ $value }}
                     </button>
                 @endforeach
+                @if($boardWinner = $this->isWon($board))
+                    <div class="flex absolute inset-0 justify-center items-center text-4xl font-bold text-white bg-black bg-opacity-50">
+                        {{ $boardWinner }}
+                    </div>
+                @endif
             </div>
-
-            @if($winner)
-                <p class="text-center text-2xl font-semibold {{ $winner === 'Draw' ? 'text-yellow-600' : ($winner === 'X' ? 'text-blue-600' : 'text-red-600') }}">
-                    {{ $winner === 'Draw' ? "It's a draw!" : "Winner: $winner" }}
-                </p>
-            @else
-                <p class="text-center text-xl text-gray-700">
-                    Current Player: <span class="font-semibold {{ $currentPlayer === 'X' ? 'text-blue-600' : 'text-red-600' }}">{{ $currentPlayer }}</span>
-                </p>
-            @endif
-        </div>
+        @endforeach
     </div>
 </div>
